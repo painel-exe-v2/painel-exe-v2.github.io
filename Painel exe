@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>AUXÍLIO EXE</title>
+<placeholder="com.dts.freefiremax">
+<placeholder="com.dts.freefireth">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="package" content="com.dts.freefiremax">
+<meta name="package" content="com.dts.freefireth">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;}
+body{background:linear-gradient(135deg,#0a0a0a,#1f1f1f);color:#fff;padding:20px;min-height:100vh;display:flex;justify-content:center;align-items:center;}
+.login,.painel{width:100%;max-width:400px;background-color:#1e1e1e;padding:30px;border-radius:25px;box-shadow:0 10px 25px rgba(0,0,0,0.5);transition:all 0.3s ease;}
+h2{text-align:center;margin-bottom:20px;color:#0af;font-weight:600;}
+input{width:100%;padding:12px;margin:12px 0;border-radius:12px;border:none;background-color:#2a2a2a;color:#fff;font-size:16px;transition:0.2s;}
+input:focus{outline:none;box-shadow:0 0 8px #0af;}
+button{width:100%;padding:12px;margin:10px 0;border-radius:12px;border:none;background:linear-gradient(90deg,#0af,#30d158);color:#fff;font-weight:bold;font-size:16px;cursor:pointer;transition:0.3s;}
+button:hover{transform:scale(1.03);box-shadow:0 4px 12px rgba(0,255,255,0.4);}
+.toggle{background-color:#2a2a2a;border-radius:15px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin:10px 0;cursor:pointer;transition:0.3s;}
+.toggle:hover{background-color:#333;}
+.toggle span{font-size:15px;font-weight:500;}
+.switch{width:40px;height:24px;background:#3a3a3c;border-radius:12px;position:relative;transition:0.3s;}
+.switch::before{content:'';width:18px;height:18px;background:white;border-radius:50%;position:absolute;top:3px;left:3px;transition:0.3s;}
+.switch.active{background:#30d158;}
+.switch.active::before{left:19px;}
+h3{margin:25px 0 10px 0;font-size:18px;color:#ff4d4d;text-align:center;}
+h4{margin-top:20px;text-align:center;font-size:14px;color:#aaa;}
+slider-container{margin:15px 0;}
+.slider-container label{display:block;margin-bottom:5px;font-size:15px;color:#fff;}
+input[type=range]{width:100%;-webkit-appearance:none;background:#2a2a2a;height:6px;border-radius:5px;outline:none;transition:0.2s;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:#0af;border-radius:50%;cursor:pointer;transition:0.2s;}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;background:#0af;border-radius:50%;cursor:pointer;transition:0.2s;}
+
+.hide { display:none; }
+</style>
+</head>
+<body>
+
+<div class="login" id="loginScreen">
+<h2>Insira sua KEY</h2>
+<input type="text" id="keyInput" placeholder="Digite sua Key de acesso">
+<button onclick="logar()">Entrar</button>
+</div>
+
+<div class="painel" id="painelScreen" style="display:none;">
+<h2>AUXÍLIO EXE V2</h2>
+
+<div class="toggle"><span>Escaneamento Automático</span><div class="switch" onclick="toggle(this)"></div></div>
+<div class="toggle"><span>Pausa no Primeiro Item</span><div class="switch" onclick="toggle(this)"></div></div>
+<div class="toggle"><span>Pressão Longa</span><div class="switch" onclick="toggle(this)"></div></div>
+<div class="toggle"><span>120 Fps</span><div class="switch" onclick="toggle(this)"></div></div>
+<div class="toggle"><span>Aim Drag</span><div class="switch" onclick="toggle(this)"></div></div>
+
+<h3>⚙️ Funções Avançadas</h3>
+<div class="toggle"><span>Aimbot Direcional</span><div class="switch" onclick="toggle(this)"></div></div>
+<div class="toggle"><span>Bypass 100% Anti-Ban</span><div class="switch" onclick="toggle(this)"></div></div>
+<div class="toggle"><span>HeadTrick 90%</span><div class="switch" onclick="toggle(this)"></div></div>
+<div class="toggle"><span>No Recoil</span><div class="switch" onclick="toggle(this)"></div></div>
+
+<hr>
+
+<div id="aimWidget" style="max-width:400px;margin:12px 0;">
+  <style>
+    #aimWidget .aim-button{background:#2a2a2a;color:#white;padding:12px;border-radius:12px;cursor:pointer;user-select:none;font-size:15px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 6px 18px rgba(0,0,0,0.35);}
+    #aimWidget .aim-button:hover{background:#333;}
+    #aimWidget .aim-list{display:none;margin-top:8px;background:#1e1e1e;border-radius:10px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.4);list-style:none;padding:0;}
+    #aimWidget .aim-list.open{display:block;}
+    #aimWidget .aim-list li{padding:10px 12px;border-bottom:1px solid #2b2b2b;cursor:pointer;font-size:15px;}
+    #aimWidget .aim-list li:last-child{border-bottom:none;}
+    #aimWidget .aim-list li:hover{background:#0af;color:#000;}
+    #aimWidget .caret{font-weight:700;opacity:.9;}
+    #aimWidget .selected{opacity:.85;font-weight:600;}
+  </style>
+
+  <div class="aim-button" id="aimButton" aria-haspopup="true" aria-expanded="false" role="button" tabindex="0">
+    <span id="aimLabel" class="selected">Selecione o alvo</span>
+    <span class="caret">▾</span>
+  </div>
+
+  <ul id="aimList" class="aim-list" role="menu" aria-hidden="true">
+    <li role="menuitem" data-value="Cabeça">Cabeça</li>
+    <li role="menuitem" data-value="Peito">Peito</li>
+    <li role="menuitem" data-value="Pescoço">Pescoço</li>
+  </ul>
+
+</div>
+
+
+<div class="slider-container">
+<label for="sensibilidade">Sensibilidade da Mira: <span id="sensValue">0</span></label>
+<input type="range" id="sensibilidade" min="0" max="100" value="0" oninput="animateSlider('sensibilidade','sensValue')">
+</div>
+
+<div class="slider-container">
+<label for="adsControl">Controle do Fov: <span id="adsValue">0</span></label>
+<input type="range" id="adsControl" min="0" max="100" value="0" oninput="animateSlider('adsControl','adsValue')">
+</div>
+
+<button id="activateBtn">Ativar</button>
+
+<button id="openAppNormalBtn" class="hide" onclick="abrirFF()">Abrir Free Fire 🔥</button>
+<button id="openAppMaxBtn" class="hide" onclick="abrirFFMax()">Abrir Free Fire Max ⚡</button>
+
+<h4>CRIADOR - 4njo</h4>
+<h4>YOUTUBER - @4njozz</h4>
+<h4>TIKTOK - @4njoz</h4>
+</div>
+
+<audio id="clickSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6d8d280ff7.mp3?filename=drum-hit-1-140236.mp3" preload="auto"></audio>
+
+<script>
+let keysValidas = [
+  { key: "444" },
+  { key: "NINJA" },
+];
+
+function logar(){
+  const key = document.getElementById('keyInput').value.trim().toUpperCase();
+  const encontrado = keysValidas.find(k => k.key === key);
+  if(encontrado){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('painelScreen').style.display='block';
+    playClick();
+  } else {
+    alert('Login inválido');
+  }
+}
+
+function tocarSom() {
+    var audio = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c0f1a1c389.mp3?filename=button-124476.mp3');
+    audio.play();
+}
+
+function abrirFF() {
+    tocarSom();
+    window.location.href = 'intent://com.dts.freefireth#Intent;scheme=android-app;end';
+}
+
+function abrirFFMax() {
+    tocarSom();
+    window.location.href = 'intent://com.dts.freefiremax#Intent;scheme=android-app;end';
+}
+
+function toggle(el){ el.classList.toggle('active'); playClick(); }
+function playClick(){ const sound=document.getElementById('clickSound'); sound.currentTime=0; sound.play(); }
+
+function animateSlider(sliderId,valueId){
+  const slider=document.getElementById(sliderId);
+  const value=document.getElementById(valueId);
+  const target=parseInt(slider.value);
+  let current=parseInt(value.textContent);
+  clearInterval(value.timer);
+  value.timer=setInterval(()=>{
+    if(current<target) current++;
+    else if(current>target) current--;
+    else clearInterval(value.timer);
+    value.textContent=current;
+  },5);
+}
+
+// ✅ AQUI ESTÁ A CORREÇÃO DO MENU ALVO ✅
+(function(){
+  const button=document.getElementById('aimButton');
+  const list=document.getElementById('aimList');
+  const label=document.getElementById('aimLabel');
+
+  function toggleList(e){
+    if(e) e.stopPropagation();
+    const open=list.classList.toggle('open');
+    button.setAttribute('aria-expanded',open?'true':'false');
+    list.setAttribute('aria-hidden',open?'false':'true');
+    playClick();
+  }
+
+  function chooseItem(val){
+    label.textContent=val;
+    list.classList.remove('open');
+    button.setAttribute('aria-expanded','false');
+    list.setAttribute('aria-hidden','true');
+    playClick();
+  }
+
+  button.addEventListener('click', toggleList);
+  button.addEventListener('keydown',(ev)=>{
+    if(ev.key==='Enter' || ev.key===' '){
+      ev.preventDefault();
+      toggleList(ev);
+    }
+  });
+
+  list.addEventListener('click',(ev)=>{
+    const li=ev.target.closest('li');
+    if(!li) return;
+    ev.stopPropagation();
+    chooseItem(li.getAttribute('data-value') || li.textContent.trim());
+  });
+
+  document.addEventListener('click',()=>{
+    if(list.classList.contains('open')){
+      list.classList.remove('open');
+      button.setAttribute('aria-expanded','false');
+      list.setAttribute('aria-hidden','true');
+    }
+  });
+
+  document.addEventListener('keydown',(ev)=>{
+    if(ev.key==='Escape' && list.classList.contains('open')){
+      list.classList.remove('open');
+      button.setAttribute('aria-expanded','false');
+      list.setAttribute('aria-hidden','true');
+    }
+  });
+})();
+/////////////////////////////////////
+
+document.getElementById('activateBtn').addEventListener('click', () => {
+  playClick();
+  const utter = new SpeechSynthesisUtterance("Auxílio exe ativado");
+  utter.lang = "pt-BR";
+  utter.rate = 1.0;
+  speechSynthesis.speak(utter);
+
+  utter.onend = () => {
+    document.getElementById("openAppMaxBtn").classList.remove("hide");
+    document.getElementById("openAppNormalBtn").classList.remove("hide");
+    document.getElementById("activateBtn").classList.add("hide");
+  };
+});
+</script>
+
+</body>
+</html>
